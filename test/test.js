@@ -26,7 +26,7 @@ beforeEach(async function () {
     // This ERC1155 contract automatically mints 5 tokens to the deploying wallet
     MyToken1155 = await contract.deploy();
 
-    contract = await ethers.getContractFactory("StarlistLootboxBetaHardhat");
+    contract = await ethers.getContractFactory("StarlistLootboxBetaTest");
     StarlistLootbox = await contract.deploy(MyToken1155.address, MyToken721.address, owner.address);
 
     // Set Merkle roots
@@ -35,10 +35,14 @@ beforeEach(async function () {
         "0x21d221c85435a38e43ed164e11b98be3f57bb2819a7cea8534f5a21f751fbc21"
     )
 
+    // Mint some tokens
+    await MyToken721.mint(6);
+    await MyToken1155.mint(1, 1);
+
     // Grant approvals to StarlistLootbox contract to transfer prize NFTs
-    await MyToken721.approve(StarlistLootbox.address, 3011);
-    await MyToken721.approve(StarlistLootbox.address, 3009);
-    await MyToken721.approve(StarlistLootbox.address, 3008);
+    for (i = 0; i < 6; i++) {
+        await MyToken721.approve(StarlistLootbox.address, i);
+    }
     await MyToken1155.setApprovalForAll(StarlistLootbox.address, true);
 
     // An uninitialised bytes32 value
@@ -125,7 +129,7 @@ describe("Claiming prizes", function () {
 
             await StarlistLootbox.connect(addr2).claim(merkleProofAddr2);
             expect(await MyToken1155.balanceOf(addr2.address, 1)).to.equal(1);
-            expect(await MyToken1155.balanceOf(owner.address, 1)).to.equal(4);
+            expect(await MyToken1155.balanceOf(owner.address, 1)).to.equal(0);
     
         });
 
@@ -134,7 +138,7 @@ describe("Claiming prizes", function () {
             await StarlistLootbox.setMerkleRoots(altMerkleRoot, bytesZero);
             await StarlistLootbox.connect(addr1).claim(altMerkleProof);
             expect(await MyToken1155.balanceOf(addr1.address, 1)).to.equal(1);
-            expect(await MyToken1155.balanceOf(owner.address, 1)).to.equal(4);
+            expect(await MyToken1155.balanceOf(owner.address, 1)).to.equal(0);
 
         });
 
@@ -152,8 +156,8 @@ describe("Claiming prizes", function () {
 
             await StarlistLootbox.connect(addr1).claim(merkleProofAddr1);
             expect(await MyToken721.balanceOf(addr1.address)).to.equal(1);
-            expect(await MyToken721.ownerOf(3008)).to.equal(addr1.address);
-            expect(await MyToken721.balanceOf(owner.address)).to.equal(2);
+            expect(await MyToken721.ownerOf(5)).to.equal(addr1.address);
+            expect(await MyToken721.balanceOf(owner.address)).to.equal(5);
     
         });
 
@@ -162,8 +166,8 @@ describe("Claiming prizes", function () {
             await StarlistLootbox.setMerkleRoots(bytesZero, altMerkleRoot);
             await StarlistLootbox.connect(addr1).claim(altMerkleProof);
             expect(await MyToken721.balanceOf(addr1.address)).to.equal(1);
-            expect(await MyToken721.ownerOf(3008)).to.equal(addr1.address);
-            expect(await MyToken721.balanceOf(owner.address)).to.equal(2);
+            expect(await MyToken721.ownerOf(5)).to.equal(addr1.address);
+            expect(await MyToken721.balanceOf(owner.address)).to.equal(5);
 
         });
 
@@ -177,7 +181,7 @@ describe("Claiming prizes", function () {
 
         });
 
-        it("Multiple poets can be claimed", async function () {
+        it("More than one user may claim their allotted poet", async function () {
 
             await StarlistLootbox.connect(addr1).claim(merkleProofAddr1);
             await StarlistLootbox.connect(addr3).claim(merkleProofAddr3);

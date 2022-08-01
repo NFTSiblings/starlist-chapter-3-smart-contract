@@ -22,7 +22,7 @@ interface IERC1155 {
     ) external;
 }
 
-contract StarlistLootboxBetaTest is AdminPrivileges {
+contract StarlistLootboxBeta is AdminPrivileges {
     address constant private LOSTPOETS_PAGES = 0x34829540A3217E96a7F5DCE63FFFf61FA44500DA; // SampleERC1155 Rinkeby
     address constant private LOSTPOETS = 0x23eD4B6E5654a57c787D2869ED4AD011eec6974a; // SampleERC721 Rinkeby
     address private vault = 0x699a1928EA12D21dd2138F36A3690059bf1253A0;

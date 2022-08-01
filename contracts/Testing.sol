@@ -32,6 +32,13 @@ contract StarlistLootboxBetaTest is AdminPrivileges {
     bytes32 private merkleRootTwo;
     uint16[] private poetTokenIDs = [0, 1, 2, 3, 4, 5]; // Update this array before deployment
 
+    // Constructor included for Hardhat testing purposes only - this should not be included on deployment
+    constructor(address pages, address poets, address _vault) {
+        LOSTPOETS_PAGES = pages;
+        LOSTPOETS = poets;
+        vault = _vault;
+    }
+
     function setMerkleRoots(bytes32 rootOne, bytes32 rootTwo) public onlyAdmins {
         merkleRootOne = rootOne;
         merkleRootTwo = rootTwo;
