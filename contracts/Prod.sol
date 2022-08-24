@@ -22,22 +22,15 @@ interface IERC1155 {
     ) external;
 }
 
-contract StarlistLootboxBetaTest is AdminPrivileges {
-    address private LOSTPOETS_PAGES; // Address should be initialised here, and be constant
-    address private LOSTPOETS; // Address should be initialised here, and be constant
-    address private vault; // Address should be initialised here
+contract StarlistLootboxProd is AdminPrivileges {
+    address constant private LOSTPOETS_PAGES = 0xA7206d878c5c3871826DfdB42191c49B1D11F466;
+    address constant private LOSTPOETS = 0x4b3406a41399c7FD2BA65cbC93697Ad9E7eA61e5;
+    address private vault = 0x218c36A974D3C6D3C95dE44896E802eE94e8A2ce;
 
     mapping(address => uint8) public claimed;
     bytes32 private merkleRootOne;
     bytes32 private merkleRootTwo;
-    uint16[] private poetTokenIDs = [0, 1, 2, 3, 4, 5]; // Update this array before deployment
-
-    // Constructor included for Hardhat testing purposes only - this should not be included on deployment
-    constructor(address pages, address poets, address _vault) {
-        LOSTPOETS_PAGES = pages;
-        LOSTPOETS = poets;
-        vault = _vault;
-    }
+    uint16[] private poetTokenIDs = [3090, 3088, 3087, 3086, 3084, 3082];
 
     function setMerkleRoots(bytes32 rootOne, bytes32 rootTwo) public onlyAdmins {
         merkleRootOne = rootOne;
@@ -67,11 +60,5 @@ contract StarlistLootboxBetaTest is AdminPrivileges {
 
             IERC721(LOSTPOETS).safeTransferFrom(vault, msg.sender, id);
         }
-    }
-
-    // TESTING FUNCTIONS - NOT TO BE INCLUDED ON PRODUCTION VERSION
-
-    function resetClaimed(address a) public onlyAdmins {
-        claimed[a] = 0;
     }
 }
