@@ -22,7 +22,7 @@ interface IERC1155 {
     ) external;
 }
 
-contract StarlistLootboxProd is AdminPrivileges {
+contract StarlistLootboxC3 is AdminPrivileges {
     address constant private LOSTPOETS_PAGES = 0xA7206d878c5c3871826DfdB42191c49B1D11F466;
     address constant private LOSTPOETS = 0x4b3406a41399c7FD2BA65cbC93697Ad9E7eA61e5;
     address private vault = 0x218c36A974D3C6D3C95dE44896E802eE94e8A2ce;
