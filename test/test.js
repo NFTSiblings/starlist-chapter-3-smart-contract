@@ -19,11 +19,9 @@ beforeEach(async function () {
     [owner, addr1, addr2, addr3] = await ethers.getSigners();
 
     contract = await ethers.getContractFactory("MyToken721");
-    // This ERC721 contract automatically mints 5 tokens to the deploying wallet
     MyToken721 = await contract.deploy();
     
     contract = await ethers.getContractFactory("MyToken1155");
-    // This ERC1155 contract automatically mints 5 tokens to the deploying wallet
     MyToken1155 = await contract.deploy();
 
     contract = await ethers.getContractFactory("StarlistLootboxBetaTest");
